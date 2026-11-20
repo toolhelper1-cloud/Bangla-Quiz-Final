@@ -1,0 +1,1340 @@
+```html
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>পেট্রোবাংলা — বাংলা ইন্টারেক্টিভ কুইজ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #f0fdfa;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --success-border: #86efac;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --danger-border: #fca5a5;
+      --warn-bg: #fffbeb;
+      --warn-border: #fde68a;
+      --warn-text: #92400e;
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Hind Siliguri', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding-bottom: 60px;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Header */
+    .hero {
+      background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 24px 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .hero p {
+      font-size: 0.96rem;
+      opacity: 0.92;
+    }
+
+    .rules-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 11px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Sticky Scoreboard */
+    .scoreboard {
+      position: sticky;
+      top: 10px;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .stat-box {
+      padding: 4px 6px;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .stat-value.correct { color: var(--success); }
+    .stat-value.wrong { color: var(--danger); }
+    .stat-value.score { color: var(--primary); }
+
+    /* Section Instruction Banner */
+    .section-banner {
+      background: var(--primary-light);
+      border-left: 5px solid var(--primary);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 22px 0 14px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 1.05rem;
+      box-shadow: 0 2px 6px rgba(15, 118, 110, 0.06);
+    }
+
+    /* Question Card */
+    .q-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s;
+    }
+
+    .q-card.answered-correct {
+      border-color: var(--success-border);
+    }
+
+    .q-card.answered-wrong {
+      border-color: var(--danger-border);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .q-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .q-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .q-status-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      display: none;
+    }
+
+    .q-status-badge.show-correct {
+      display: inline-block;
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .q-status-badge.show-wrong {
+      display: inline-block;
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    /* Options */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 600px) {
+      .options-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .options-grid .option-btn:last-child:nth-child(odd) {
+        grid-column: span 2;
+      }
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .opt-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.88rem;
+      flex-shrink: 0;
+    }
+
+    .option-btn.correct-opt {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: #14532d;
+      font-weight: 700;
+    }
+
+    .option-btn.correct-opt .opt-letter {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .option-btn.wrong-opt {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: #7f1d1d;
+      font-weight: 700;
+    }
+
+    .option-btn.wrong-opt .opt-letter {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    /* Explanation Toggle & Content */
+    .exp-toggle-wrap {
+      margin-top: 14px;
+      display: none;
+    }
+
+    .exp-toggle-wrap.visible {
+      display: block;
+    }
+
+    .exp-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 9px 16px;
+      font-family: inherit;
+      font-size: 0.94rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .exp-toggle-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .exp-box {
+      display: none;
+      margin-top: 14px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    .exp-box.open {
+      display: block;
+      animation: fadeIn 0.22s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .exp-section {
+      padding: 14px 16px;
+    }
+
+    .exp-section + .exp-section {
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .exp-section.extra-section {
+      background: var(--warn-bg);
+    }
+
+    .exp-heading {
+      font-size: 0.96rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .exp-heading.pdf-head { color: var(--primary-dark); }
+    .exp-heading.extra-head { color: var(--warn-text); }
+
+    .exp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 0.93rem;
+    }
+
+    .exp-table th, .exp-table td {
+      border: 1px solid #e2e8f0;
+      padding: 7px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .exp-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 7px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .extra-list {
+      padding-left: 18px;
+      font-size: 0.94rem;
+      color: #451a03;
+    }
+
+    .extra-list li {
+      margin-bottom: 5px;
+    }
+
+    /* Footer Actions */
+    .actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 28px 0 20px;
+    }
+
+    .btn-primary, .btn-secondary {
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 13px 24px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s, background 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    /* Result Summary & Wrong Questions Section */
+    #result-panel {
+      display: none;
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin-top: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    #result-panel.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .result-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .res-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .res-card .label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .res-card .val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .res-card.highlight {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .res-card.highlight .val {
+      color: var(--primary-dark);
+    }
+
+    .wrong-list-section {
+      margin-top: 24px;
+      border-top: 2px solid var(--border);
+      padding-top: 18px;
+    }
+
+    .wrong-list-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--danger);
+      margin-bottom: 14px;
+    }
+
+    .wrong-item {
+      background: #fff5f5;
+      border: 1px solid var(--danger-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .wrong-item-q {
+      font-weight: 700;
+      font-size: 1.03rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .wrong-item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.94rem;
+      margin-bottom: 6px;
+    }
+
+    .tag-user {
+      background: var(--danger-bg);
+      color: var(--danger);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .tag-correct {
+      background: var(--success-bg);
+      color: var(--success);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .perfect-box {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: #14532d;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 520px) {
+      .hero h1 { font-size: 1.35rem; }
+      .scoreboard { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="hero">
+      <div class="hero-badge">পেট্রোবাংলা • সহকারী ব্যবস্থাপক (প্রশাসন) • ২২.১১.২০২৪</div>
+      <h1>বাংলা অংশ — ইন্টারেক্টিভ MCQ কুইজ</h1>
+      <p>মূল প্রশ্নপত্রের নির্দেশনা ও সম্পূর্ণ ব্যাখ্যাসহ অনুশীলন করুন। উত্তর দাগানোর পর ক্লিক করে বিস্তারিত ব্যাখ্যা এবং পরীক্ষায় আসার মতো অতিরিক্ত তথ্য দেখে নিন।</p>
+      <div class="rules-pills">
+        <span class="pill">মোট প্রশ্ন: ১৫টি</span>
+        <span class="pill">সঠিক উত্তর: +১.০০</span>
+        <span class="pill">ভুল উত্তর: -০.৫০</span>
+      </div>
+    </header>
+
+    <!-- Live Scoreboard -->
+    <div class="scoreboard" aria-live="polite">
+      <div class="stat-box">
+        <div class="stat-label">উত্তর দিয়েছেন</div>
+        <div class="stat-value" id="stat-answered">০ / ১৫</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">সঠিক</div>
+        <div class="stat-value correct" id="stat-correct">০</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">ভুল (-০.৫০)</div>
+        <div class="stat-value wrong" id="stat-wrong">০</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">বর্তমান নম্বর</div>
+        <div class="stat-value score" id="stat-score">০.০০</div>
+      </div>
+    </div>
+
+    <!-- Quiz Container -->
+    <main id="quiz-container"></main>
+
+    <!-- Action Buttons -->
+    <div class="actions-bar">
+      <button class="btn-primary" id="btn-finish">ফলাফল ও ভুল প্রশ্নের তালিকা দেখুন</button>
+      <button class="btn-secondary" id="btn-reset">পুনরায় পরীক্ষা দিন</button>
+    </div>
+
+    <!-- Final Result & Wrong Questions List -->
+    <section id="result-panel">
+      <h2 class="result-title">পরীক্ষার চূড়ান্ত ফলাফল</h2>
+      <div class="result-grid" id="result-summary-grid"></div>
+      <div class="wrong-list-section" id="wrong-list-container"></div>
+    </section>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        sectionInstruction: "Q. 1-4: শব্দের অর্থ নির্ণয় করুন:",
+        question: "নিনাদ",
+        options: [
+          { key: "A", text: "শব্দ" },
+          { key: "B", text: "যুদ্ধ" },
+          { key: "C", text: "বিশাল" },
+          { key: "D", text: "জটিল" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "A",
+        correctDisplay: "A. শব্দ",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: A):</strong> কিছু গুরুত্বপূর্ণ শব্দার্থ নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>নিনাদ:</strong> শব্দ</td><td><strong>কার্তিক:</strong> রূপবান</td><td><strong>গাড়ল:</strong> বোকা</td></tr>
+              <tr><td><strong>সওগাত:</strong> উপহার</td><td><strong>আপণ:</strong> দোকান</td><td><strong>কিরীট:</strong> মুকুট</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "ধ্বনি/শব্দ সংক্রান্ত আরও গুরুত্বপূর্ণ শব্দার্থ: <strong>নির্ঘোষ</strong> = গম্ভীর ধ্বনি, <strong>নিস্বন</strong> = শব্দ/ধ্বনি, <strong>কূজন</strong> = পাখির ডাক, <strong>তূর্য</strong> = রণবাদ্য।",
+          "<strong>আপণ</strong> (দোকান) বনাম <strong>আপন</strong> (নিজ)—বানান ও অর্থের পার্থক্য পরীক্ষায় প্রায়ই আসে।",
+          "আরও কিছু গুরুত্বপূর্ণ শব্দার্থ: <strong>উপল</strong> = পাথর, <strong>অংশু</strong> = কিরণ, <strong>কপোল</strong> = গাল, <strong>কপাল</strong> = ললাট/ভাগ্য।"
+        ]
+      },
+      {
+        id: 2,
+        question: "বারিধি",
+        options: [
+          { key: "A", text: "মেঘ" },
+          { key: "B", text: "সমুদ্র" },
+          { key: "C", text: "পানি" },
+          { key: "D", text: "পর্বত" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "B",
+        correctDisplay: "B. সমুদ্র",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: B):</strong> কিছু গুরুত্বপূর্ণ শব্দার্থ নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>সেতারা:</strong> তারকা</td><td><strong>তণ্ডুল:</strong> চাল</td><td><strong>প্রাংশু:</strong> দীর্ঘকায়</td></tr>
+              <tr><td><strong>বারিধি:</strong> সমুদ্র</td><td><strong>তটিনী:</strong> নদী</td><td><strong>বালাখানা:</strong> প্রাসাদ</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "<strong>'বারি' (পানি) যুক্ত শব্দগুলোর পার্থক্য (খুবই গুরুত্বপূর্ণ):</strong> বারিধি / বারীন্দ্র / বারীশ = <strong>সমুদ্র</strong>; বারিদ = <strong>মেঘ</strong> (পানি দান করে যে); বারিজ = <strong>পদ্ম</strong> (পানিতে জন্মায় যা)।",
+          "সমুদ্রের আরও সমার্থক শব্দ: <strong>অর্ণব, পাথার, পারাবার, রত্নাকর, উদধি, জলধি, অম্বুধি, সিন্ধু</strong>।",
+          "নদীর সমার্থক শব্দ: <strong>তটিনী, তরঙ্গিণী, স্রোতস্বিনী, প্রবাহিণী, শৈবালিনী, কল্লোলিনী</strong>।"
+        ]
+      },
+      {
+        id: 3,
+        question: "খপোত",
+        options: [
+          { key: "A", text: "খরগোশ" },
+          { key: "B", text: "গাড়ি" },
+          { key: "C", text: "হরিণ" },
+          { key: "D", text: "উড়োজাহাজ" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "D",
+        correctDisplay: "D. উড়োজাহাজ",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: D):</strong> কিছু গুরুত্বপূর্ণ শব্দার্থ নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>খপোত:</strong> উড়োজাহাজ</td><td><strong>শাখামৃগ:</strong> বানর</td><td><strong>নীলিমা:</strong> আকাশ</td></tr>
+              <tr><td><strong>মহাপ্রয়াণ:</strong> মৃত্যু</td><td><strong>মধুকর:</strong> ভ্রমর</td><td><strong>হলাহল:</strong> বিষ</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "<strong>'খ' অর্থ আকাশ।</strong> তাই খ-যুক্ত গুরুত্বপূর্ণ শব্দ: <strong>খপোত</strong> = আকাশযান/উড়োজাহাজ, <strong>খগ / খেচর</strong> = পাখি (আকাশে বিচরণ করে যা), <strong>খগেন্দ্র</strong> = গরুড়।",
+          "আকাশের সমার্থক শব্দ: <strong>গগন, অম্বর, ব্যোম, নভঃ, অন্তরীক্ষ, দ্যুলোক, শূন্য</strong>।",
+          "ভ্রমরের সমার্থক শব্দ: <strong>অলি, মধুপ, মধুকর, ভৃঙ্গ, ষট্পদ, দ্বিরেফ</strong>।"
+        ]
+      },
+      {
+        id: 4,
+        question: "প্রসূন",
+        options: [
+          { key: "A", text: "কর" },
+          { key: "B", text: "বৃক্ষ" },
+          { key: "C", text: "পুষ্প" },
+          { key: "D", text: "জল" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "C",
+        correctDisplay: "C. পুষ্প",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: C):</strong> কিছু গুরুত্বপূর্ণ শব্দার্থ নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>প্রসূন:</strong> পুষ্প</td><td><strong>গহন:</strong> বন</td><td><strong>শিখরী:</strong> বৃক্ষ</td></tr>
+              <tr><td><strong>বানিয়া:</strong> ব্যবসায়ী</td><td><strong>ক্ষণপ্রভা:</strong> বিদ্যুৎ</td><td><strong>অশনি:</strong> বজ্র</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "ফুল/পুষ্পের আরও গুরুত্বপূর্ণ সমার্থক শব্দ: <strong>কুসুম, সুমন, রঙ্গন, পুষ্পক, মঞ্জরি</strong>।",
+          "বিদ্যুতের সমার্থক শব্দ: <strong>চপলা, চঞ্চলা, তড়িৎ, সৌদামিনী, দামিনী, অচিরপ্রভা, শম্পা</strong>।",
+          "বৃক্ষের সমার্থক শব্দ: <strong>তরু, দ্রুম, বিটপী, পাদপ, মহীরুহ, শাখী</strong>। আর <strong>অটবি / কানন / বিপিন / অরণ্য</strong> = বন।"
+        ]
+      },
+      {
+        id: 5,
+        sectionInstruction: "প্রশ্ন ৫–৬: পারিভাষিক শব্দ ও সন্ধি বিচ্ছেদ:",
+        question: "Horizontal শব্দের পরিভাষা",
+        options: [
+          { key: "A", text: "অনুভূমিক" },
+          { key: "B", text: "সমান্তরাল" },
+          { key: "C", text: "উলম্ব" },
+          { key: "D", text: "দিগন্ত বিস্তৃত" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "A",
+        correctDisplay: "A. অনুভূমিক",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: A):</strong> কিছু গুরুত্বপূর্ণ পারিভাষিক শব্দ নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>Horizontal:</strong> অনুভূমিক</td><td><strong>Deed:</strong> দলিল</td><td><strong>Invoice:</strong> চালান</td></tr>
+              <tr><td><strong>Blue print:</strong> প্রতিচিত্র</td><td><strong>Mortgage:</strong> বন্ধক</td><td><strong>Surgeon:</strong> শল্য চিকিৎসক</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "দিকসংক্রান্ত পারিভাষিক শব্দ: <strong>Vertical</strong> = উলম্ব, <strong>Parallel</strong> = সমান্তরাল, <strong>Perpendicular</strong> = লম্ব, <strong>Diagonal</strong> = কর্ণ।",
+          "চাকরির পরীক্ষায় বহুল ব্যবহৃত আরও পারিভাষিক শব্দ: <strong>Affidavit</strong> = হলফনামা, <strong>Bail</strong> = জামিন, <strong>Bulletin</strong> = জ্ঞাপনপত্র, <strong>Copyright</strong> = গ্রন্থস্বত্ব, <strong>Embargo</strong> = অবরোধ, <strong>Memorandum</strong> = স্মারকলিপি, <strong>Subsidy</strong> = ভর্তুকি, <strong>Quota</strong> = যথাংশ।"
+        ]
+      },
+      {
+        id: 6,
+        question: "'নিরাময়' এর সন্ধি বিচ্ছেদ কোনটি?",
+        options: [
+          { key: "A", text: "নিরা+ময়" },
+          { key: "B", text: "নির্+আময়" },
+          { key: "C", text: "নির+ময়" },
+          { key: "D", text: "নিঃ+আময়" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "D",
+        correctDisplay: "D. নিঃ+আময়",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: D):</strong></p>
+          <table class="exp-table">
+            <tbody>
+              <tr>
+                <th>নিয়ম</th>
+                <td colspan="3">অ/আ ভিন্ন অন্য স্বরধ্বনির পর বিসর্গ (র-জাত) + স্বরধ্বনি = বিসর্গ <strong>'র'</strong> হয়ে পরের স্বরধ্বনিতে যুক্ত হয়।</td>
+              </tr>
+              <tr>
+                <th rowspan="2">উদাহরণ</th>
+                <td>চতুরঙ্গ = চতুঃ + অঙ্গ</td>
+                <td>নিরাকার = নিঃ + আকার</td>
+                <td>দুরবস্থা = দুঃ + অবস্থা</td>
+              </tr>
+              <tr>
+                <td>দুরাশা = দুঃ + আশা</td>
+                <td>নিরাময় = নিঃ + আময়</td>
+                <td>নিরন্ন = নিঃ + অন্ন</td>
+              </tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "একই নিয়মের আরও গুরুত্বপূর্ণ বিসর্গ সন্ধি: <strong>নিরবধি</strong> = নিঃ + অবধি, <strong>নিরুদ্দেশ</strong> = নিঃ + উদ্দেশ, <strong>নিরীক্ষা</strong> = নিঃ + ঈক্ষা, <strong>দুর্যোগ</strong> = দুঃ + যোগ, <strong>আশীর্বাদ</strong> = আশীঃ + বাদ, <strong>প্রাদুর্ভাব</strong> = প্রাদুঃ + ভাব।",
+          "বিশেষ ব্যতিক্রম মনে রাখুন: বিসর্গের পর 'র' থাকলে বিসর্গ লোপ পায় ও পূর্বের হ্রস্বস্বর দীর্ঘ হয়— যেমন: <strong>নীরব</strong> = নিঃ + রব, <strong>নীরস</strong> = নিঃ + রস, <strong>নীরোগ</strong> = নিঃ + রোগ।"
+        ]
+      },
+      {
+        id: 7,
+        sectionInstruction: "Q. 7-9: সঠিক বানান নির্ণয় করুন:",
+        question: "সঠিক বানান কোনটি?",
+        options: [
+          { key: "A", text: "আনুসঙ্গিক" },
+          { key: "B", text: "অনুসঙ্গিক" },
+          { key: "C", text: "অনুষঙ্গিক" },
+          { key: "D", text: "আনুষঙ্গিক" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "D",
+        correctDisplay: "D. আনুষঙ্গিক",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: D):</strong> কয়েকটি সঠিক বানানযুক্ত শব্দ নিম্নরূপ—</p>
+          <div class="chip-list">
+            <span class="chip">উচিত</span>
+            <span class="chip">শিরশ্ছেদ</span>
+            <span class="chip">আনুষঙ্গিক</span>
+            <span class="chip">নিশীথিনী</span>
+            <span class="chip">ব্যুৎপত্তি</span>
+            <span class="chip">মধুসূদন</span>
+            <span class="chip">ষাণ্মাসিক</span>
+            <span class="chip">ব্যগ্র</span>
+          </div>
+        `,
+        extraNotes: [
+          "বানানের নিয়ম: <strong>অনুষঙ্গ + ইক = আনুষঙ্গিক</strong>। 'ইক' প্রত্যয় যুক্ত হলে শব্দের আদি স্বর 'অ' পরিবর্তিত হয়ে 'আ' হয় (যেমন: সপ্তাহ+ইক = সাপ্তাহিক, সমাজ+ইক = সামাজিক)।",
+          "পরীক্ষায় বারবার আসা শুদ্ধ বানান: <strong>আকাঙ্ক্ষা, পিপীলিকা, মরীচিকা, বিভীষিকা, মুহূর্ত, শুশ্রূষা, সান্ত্বনা, ন্যূনতম, গীতাঞ্জলি, শ্রদ্ধাঞ্জলি, বাল্মীকি</strong>।"
+        ]
+      },
+      {
+        id: 8,
+        question: "সঠিক বানান কোনটি?",
+        options: [
+          { key: "A", text: "দেদীপ্যমান" },
+          { key: "B", text: "দেদীপ্যমাণ" },
+          { key: "C", text: "দেদিপ্যমান" },
+          { key: "D", text: "দেদিপ্যমাণ" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "A",
+        correctDisplay: "A. দেদীপ্যমান",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: A):</strong> কয়েকটি সঠিক বানানযুক্ত শব্দ নিম্নরূপ—</p>
+          <div class="chip-list">
+            <span class="chip">দেদীপ্যমান</span>
+            <span class="chip">প্রতিযোগিতা</span>
+            <span class="chip">অত্যধিক</span>
+            <span class="chip">ব্যাধি</span>
+            <span class="chip">বৈদগ্ধ্য</span>
+            <span class="chip">মূর্ধন্য</span>
+            <span class="chip">মনীষী</span>
+            <span class="chip">নিস্পন্দ</span>
+          </div>
+        `,
+        extraNotes: [
+          "'মান' প্রত্যয়যুক্ত শুদ্ধ বানান: <strong>দেদীপ্যমান, জাজ্বল্যমান, শোভমান, চলমান</strong> (শেষে দন্ত্য 'ন' হয়, মূর্ধন্য 'ণ' নয়)।",
+          "দীর্ঘ-ঈ (ী) ও হ্রস্ব-ই (ি) কারের গুরুত্বপূর্ণ বানান: <strong>প্রতিযোগী</strong> কিন্তু <strong>প্রতিযোগিতা</strong>, <strong>সহযোগী</strong> কিন্তু <strong>সহযোগিতা</strong>, <strong>মন্ত্রিসভা</strong>, <strong>প্রাণিবিদ্যা</strong>, <strong>স্বায়ত্তশাসন</strong>, <strong>অতীন্দ্রিয়</strong>।"
+        ]
+      },
+      {
+        id: 9,
+        question: "সঠিক বানান কোনটি?",
+        options: [
+          { key: "A", text: "সমিচীন" },
+          { key: "B", text: "বয়সন্ধি" },
+          { key: "C", text: "মনন্ত্রর" },
+          { key: "D", text: "অন্তঃসার" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "D",
+        correctDisplay: "D. অন্তঃসার",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: D):</strong> ভুল ও সঠিক বানানের তালিকা—</p>
+          <table class="exp-table">
+            <thead>
+              <tr><th>ভুল বানান</th><th>সঠিক বানান</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>সমিচীন</td><td><strong>সমীচীন</strong></td></tr>
+              <tr><td>বয়সন্ধি</td><td><strong>বয়ঃসন্ধি</strong></td></tr>
+              <tr><td>মনন্ত্রর</td><td><strong>মন্বন্তর</strong></td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "বিসর্গযুক্ত গুরুত্বপূর্ণ শুদ্ধ বানান: <strong>অন্তঃসার, বয়ঃসন্ধি, অন্তঃসত্ত্বা, অধঃপতন, মনঃকষ্ট, স্বতঃস্ফূর্ত, ইতঃপূর্বে, নিঃসন্দেহ, শিরঃপীড়া</strong>।",
+          "<strong>মন্বন্তর</strong> শব্দের সন্ধি বিচ্ছেদ: <strong>মনু + অন্তর</strong> (উ-কারের পর অ-কার থাকায় ব-ফলা হয়েছে)। এছাড়া <strong>উচ্ছ্বাস, উজ্জ্বল, সন্ন্যাসী, দুশ্চিন্তা</strong> বানানগুলো ভালোভাবে দেখুন।"
+        ]
+      },
+      {
+        id: 10,
+        sectionInstruction: "Q. 10-13: বাগধারার অর্থ নির্ণয় করুন:",
+        question: "সাতকাহন",
+        options: [
+          { key: "A", text: "অলিক কথা" },
+          { key: "B", text: "সুখের সময়" },
+          { key: "C", text: "জগা খিচুড়ি" },
+          { key: "D", text: "সংঘাত" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "E",
+        correctDisplay: "E. কোনোটিই নয় (সঠিক অর্থ: প্রচুর পরিমাণ)",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: E):</strong> কয়েকটি গুরুত্বপূর্ণ বাগধারা নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>সাতকাহন:</strong> প্রচুর পরিমাণ</td><td><strong>গৌরীদান:</strong> বাল্যবিবাহ</td></tr>
+              <tr><td><strong>কুম্ভকর্ণের নিদ্রা:</strong> দীর্ঘদিনের আলস্য</td><td><strong>ঘাটের মরা:</strong> অতি বৃদ্ধ</td></tr>
+              <tr><td><strong>গোঁফ খেজুরে:</strong> নিতান্ত অলস</td><td><strong>কাছা ঢিলা:</strong> অসাবধান</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "সংখ্যাবাচক গুরুত্বপূর্ণ বাগধারা: <strong>নয়-ছয়</strong> = অপচয়, <strong>উনিশ-বিশ</strong> = সামান্য পার্থক্য, <strong>আঠারো মাসে বছর</strong> = দীর্ঘসূত্রতা, <strong>একাদশে বৃহস্পতি</strong> = সৌভাগ্যের বিষয়, <strong>সাত-পাঁচ</strong> = নানা রকম / এদিক-ওদিক চিন্তা, <strong>নব্বই-আশি</strong> নয় বরং <strong>আটকপালে</strong> = হতভাগ্য।",
+          "অপশনে থাকা <strong>জগাখিচুড়ি</strong> বাগধারার অর্থ: বিশৃঙ্খলা/গোলমাল।"
+        ]
+      },
+      {
+        id: 11,
+        question: "শিরে সংক্রান্তি",
+        options: [
+          { key: "A", text: "মাথায় বোঝা" },
+          { key: "B", text: "সুখের সময়" },
+          { key: "C", text: "আসন্ন বিপদ" },
+          { key: "D", text: "সংক্রামক" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "C",
+        correctDisplay: "C. আসন্ন বিপদ",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: C):</strong> কয়েকটি গুরুত্বপূর্ণ বাগধারা নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>শিরে সংক্রান্তি:</strong> আসন্ন বিপদ</td><td><strong>গায়ে মাখা:</strong> গুরুত্ব দেয়া</td></tr>
+              <tr><td><strong>আঁকুপাঁকু করা:</strong> ছটফটানি</td><td><strong>চিঁড়ে চেপটা:</strong> নাজেহাল</td></tr>
+              <tr><td><strong>গাঁ করা:</strong> উদ্যোগ নেয়া</td><td><strong>কাপুড়ে বাবু:</strong> ভণ্ড</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "বিপদ ও দুর্ভাগ্য সংক্রান্ত গুরুত্বপূর্ণ বাগধারা: <strong>অকূল পাথার</strong> = ভীষণ বিপদ, <strong>মড়ার উপর খাঁড়ার ঘা</strong> = বিপদের উপর বিপদ, <strong>গোদের ওপর বিষফোঁড়া</strong> = বিপদের উপর আরও বিপদ, <strong>শিয়রে শমন</strong> = আসন্ন মৃত্যু, <strong>ইঁদুর কপালে</strong> = নিতান্ত মন্দভাগ্য।",
+          "<strong>আগডুম বাগডুম</strong> = অর্থহীন কথা, <strong>কূপমণ্ডূক</strong> = সীমিত জ্ঞানসম্পন্ন ব্যক্তি।"
+        ]
+      },
+      {
+        id: 12,
+        question: "রামগরুড়ের ছানা",
+        options: [
+          { key: "A", text: "কাল্পনিক বস্তু" },
+          { key: "B", text: "গোমড়ামুখো লোক" },
+          { key: "C", text: "দুষ্ট সন্তান" },
+          { key: "D", text: "ভাগ্যবান" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "B",
+        correctDisplay: "B. গোমড়ামুখো লোক",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: B):</strong> কিছু গুরুত্বপূর্ণ বাগধারা নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>কাক নিদ্রা:</strong> অগভীর নিদ্রা</td><td><strong>নাটের গুরু:</strong> মূলনায়ক</td></tr>
+              <tr><td><strong>তাক লাগা:</strong> আশ্চর্য হওয়া</td><td><strong>ধর্মের কল:</strong> সত্য</td></tr>
+              <tr><td><strong>রামগরুড়ের ছানা:</strong> গোমড়ামুখো লোক</td><td><strong>ধনুর্ভঙ্গ পণ:</strong> কঠিন প্রতিজ্ঞা</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "প্রাণিবাচক গুরুত্বপূর্ণ বাগধারা: <strong>অজগর বৃত্তি</strong> = আলসেমি, <strong>ব্যাঙের আধুলি</strong> = সামান্য সম্পদ, <strong>মাছের মায়ের পুত্রশোক</strong> = কপট বেদনা, <strong>বিড়াল তপস্বী</strong> = ভণ্ড সাধু, <strong>শকুনি মামা</strong> = কুচক্রী লোক, <strong>অগাধ জলের মাছ</strong> = খুব চালাক ব্যক্তি।",
+          "'রামগরুড়ের ছানা' কবিতাটির রচয়িতা <strong>সুকুমার রায়</strong> (আবোল তাবোল গ্রন্থ) — সাহিত্য অংশে এটিও আসতে পারে!"
+        ]
+      },
+      {
+        id: 13,
+        question: "লেফাফা দুরস্ত",
+        options: [
+          { key: "A", text: "চৌকস ব্যক্তি" },
+          { key: "B", text: "সৌখিন ব্যক্তি" },
+          { key: "C", text: "দাপুটে ব্যক্তি" },
+          { key: "D", text: "বাইরে পরিপাটি" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "D",
+        correctDisplay: "D. বাইরে পরিপাটি",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: D):</strong> কিছু গুরুত্বপূর্ণ বাগধারা নিম্নরূপ—</p>
+          <table class="exp-table">
+            <tbody>
+              <tr><td><strong>লেফাফা দুরস্ত:</strong> বাইরে পরিপাটি</td><td><strong>ধামাধরা:</strong> চাটুকারিতা</td></tr>
+              <tr><td><strong>নাড়াবুনে:</strong> মূর্খ</td><td><strong>ধর্মের কল:</strong> সত্য</td></tr>
+              <tr><td><strong>ছকড়া নকড়া:</strong> সস্তা দর</td><td><strong>চিনির বলদ:</strong> নিষ্ফল পরিশ্রম</td></tr>
+            </tbody>
+          </table>
+        `,
+        extraNotes: [
+          "স্বভাব ও চরিত্র বিষয়ক আরও গুরুত্বপূর্ণ বাগধারা: <strong>কেতাদুরস্ত</strong> = পরিপাটি, <strong>ঠোঁটকাটা</strong> = স্পষ্টভাষী, <strong>দুধের মাছি</strong> = সুসময়ের বন্ধু, <strong>ভিজে বিড়াল</strong> = কপটচারী, <strong>ঢাকের কাঠি</strong> = মোসাহেব, <strong>গড্ডলিকা প্রবাহ</strong> = অন্ধ অনুকরণ।",
+          "<strong>চিনির বলদ</strong> (নিষ্ফল পরিশ্রম) এর সমার্থক বাগধারা: <strong>ভস্মে ঘি ঢালা</strong> / <strong>অরণ্যে রোদন</strong>।"
+        ]
+      },
+      {
+        id: 14,
+        sectionInstruction: "প্রশ্ন ১৪–১৫: সমাস ও শব্দভান্ডার:",
+        question: "'গণ্যমান্য' কোন সমাস?",
+        options: [
+          { key: "A", text: "দ্বন্দ্ব" },
+          { key: "B", text: "কর্মধারয়" },
+          { key: "C", text: "অব্যয়ীভাব" },
+          { key: "D", text: "নিত্য" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "B",
+        correctDisplay: "B. কর্মধারয়",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: B):</strong> যেখানে বিশেষণ বা বিশেষণভাবাপন্ন পদের সাথে বিশেষ্য বা বিশেষ্যভাবাপন্ন পদের সমাস হয় এবং পরপদের অর্থই প্রধান রূপে প্রতীয়মান হয়, তাকে <strong>কর্মধারয় সমাস</strong> বলে। এ সমাসে সাধারণত <em>যে, যিনি, যেটি</em> ইত্যাদি শব্দ ব্যাসবাক্যে ব্যবহৃত হয়। যেমন: যা কাঁচা তাই মিঠা (বিশেষণ+বিশেষণ) = কাঁচামিঠা। প্রদত্ত উদাহরণের 'কাঁচা' ও 'মিঠা' হলো বিশেষণ পদ।</p>
+          <p style="margin-top:8px;"><strong>কিছু কর্মধারয় সমাসের উদাহরণ:</strong> গণ্যমান্য, ইহকাল, অনুতাপ, নীলাম্বর, কদাচার, খাসমহল, হারামণি, ক্ষুধিত পাষাণ, মহাকীর্তি, রাজর্ষি, নরাধম, ধোয়ামোছা।</p>
+        `,
+        extraNotes: [
+          "<strong>কর্মধারয় সমাসের ৪টি প্রধান প্রকারভেদ (পরীক্ষায় খুবই গুরুত্বপূর্ণ):</strong>",
+          "১) <strong>মধ্যপদলোপী কর্মধারয়:</strong> সিংহ চিহ্নিত আসন = সিংহাসন, স্মৃতি রক্ষার্থে সৌধ = স্মৃতিসৌধ, সাহিত্য বিষয়ক সভা = সাহিত্যসভা।",
+          "২) <strong>উপমান কর্মধারয় (সাধারণ গুণ থাকে):</strong> তুষারের ন্যায় শুভ্র = তুষারশুভ্র, কাজলের ন্যায় কালো = কাজলকালো।",
+          "৩) <strong>উপমিত কর্মধারয় (দুটিই বিশেষ্য):</strong> মুখ চন্দ্রের ন্যায় = চন্দ্রমুখ, পুরুষ সিংহের ন্যায় = সিংহপুরুষ।",
+          "৪) <strong>রূপক কর্মধারয় (অভেদ কল্পনা):</strong> মন রূপ মাঝি = মনমাঝি, বিষাদ রূপ সিন্ধু = বিষাদসিন্ধু।"
+        ]
+      },
+      {
+        id: 15,
+        question: "'টাইফুন' কোন ভাষার শব্দ?",
+        options: [
+          { key: "A", text: "চীনা" },
+          { key: "B", text: "ইংরেজি" },
+          { key: "C", text: "মালয়" },
+          { key: "D", text: "জাপানি" },
+          { key: "E", text: "কোনোটিই নয়" }
+        ],
+        correct: "E",
+        correctDisplay: "E. কোনোটিই নয় (আরবি ভাষার শব্দ)",
+        pdfExplanationHtml: `
+          <p><strong>ব্যাখ্যা (উত্তর: E):</strong> বিভিন্ন ভাষার কিছু গুরুত্বপূর্ণ শব্দ নিম্নরূপ—</p>
+          <table class="exp-table">
+            <thead>
+              <tr><th>ভাষা</th><th>শব্দ</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>চীনা</strong></td><td>এলাচি, চা, চিনি, লিচু, সাম্পান</td></tr>
+              <tr><td><strong>ইংরেজি</strong></td><td>আফিম, কলেজ, ইউনিয়ন, চেয়ার, নভেল</td></tr>
+              <tr><td><strong>জাপানি</strong></td><td>ক্যারাটে, রিক্সা, প্যাগোডা, সুনামি, হারিকিরি</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:8px;"><strong>বাংলা একাডেমি আধুনিক বাংলা অভিধান</strong> অনুসারে 'টাইফুন' <strong>আরবি</strong> ভাষার শব্দ।</p>
+        `,
+        extraNotes: [
+          "<strong>আরবি শব্দ:</strong> আদালত, আইন, কলম, কিতাব, ঈদ, ওজর, গোসল, দোয়াত, নগদ, বাকি, মহকুমা, রায়, হালাল, হারাম।",
+          "<strong>ফারসি শব্দ:</strong> চশমা, জবানবন্দি, তারিখ, তোশক, দপ্তর, দরবার, দস্তখত, নালিশ, নামাজ, রোজা, বাদশাহ, হাঙ্গামা।",
+          "<strong>পর্তুগিজ শব্দ:</strong> আনারস, আলপিন, আলমারি, গির্জা, গুদাম, চাবি, পাউরুটি, পাদ্রি, বালতি, বোতাম, সাবান।",
+          "<strong>ফরাসি:</strong> কার্তুজ, কুপন, ডিপো, রেস্তোরাঁ। <strong>তুর্কি:</strong> চাকর, চাকু, তোপ, দারোগা, বাবুর্চি, বেগম, লাশ। <strong>গুজরাটি:</strong> খদ্দর, হরতাল। <strong>বর্মি:</strong> ফুঙ্গি, লুঙ্গি।"
+        ]
+      }
+    ];
+
+    // State
+    let userAnswers = {};
+
+    // Bengali digit converter
+    function toBnNum(num) {
+      const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+      return String(num).replace(/\d/g, d => bnDigits[d]);
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById("quiz-container");
+      container.innerHTML = "";
+
+      quizData.forEach((q) => {
+        if (q.sectionInstruction) {
+          const banner = document.createElement("div");
+          banner.className = "section-banner";
+          banner.textContent = q.sectionInstruction;
+          container.appendChild(banner);
+        }
+
+        const card = document.createElement("article");
+        card.className = "q-card";
+        card.id = `q-card-${q.id}`;
+
+        const optionsHtml = q.options.map(opt => `
+          <button type="button" class="option-btn" data-qid="${q.id}" data-key="${opt.key}">
+            <span class="opt-letter">${opt.key}</span>
+            <span>${opt.text}</span>
+          </button>
+        `).join("");
+
+        const extraListHtml = q.extraNotes.map(item => `<li>${item}</li>`).join("");
+
+        card.innerHTML = `
+          <div class="q-header">
+            <div class="q-title">
+              <span class="q-num">${toBnNum(q.id)}</span>
+              <span>${q.question}</span>
+            </div>
+            <span class="q-status-badge" id="badge-${q.id}"></span>
+          </div>
+
+          <div class="options-grid" id="options-${q.id}">
+            ${optionsHtml}
+          </div>
+
+          <div class="exp-toggle-wrap" id="exp-wrap-${q.id}">
+            <button type="button" class="exp-toggle-btn" data-toggle-exp="${q.id}">
+              <span>📖 ব্যাখ্যা ও অতিরিক্ত তথ্য দেখুন</span>
+            </button>
+            <div class="exp-box" id="exp-box-${q.id}">
+              <div class="exp-section">
+                <div class="exp-heading pdf-head">✅ সঠিক উত্তর: ${q.correctDisplay}</div>
+                <div class="exp-heading pdf-head" style="margin-top:6px;">📘 ফাইলের সম্পূর্ণ ব্যাখ্যা</div>
+                ${q.pdfExplanationHtml}
+              </div>
+              <div class="exp-section extra-section">
+                <div class="exp-heading extra-head">💡 পরীক্ষায় আসার মতো অতিরিক্ত গুরুত্বপূর্ণ তথ্য</div>
+                <ul class="extra-list">
+                  ${extraListHtml}
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Bind option click events
+      document.querySelectorAll(".option-btn").forEach(btn => {
+        btn.addEventListener("click", handleOptionClick);
+      });
+
+      // Bind explanation toggle events
+      document.querySelectorAll("[data-toggle-exp]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const qid = e.currentTarget.getAttribute("data-toggle-exp");
+          const box = document.getElementById(`exp-box-${qid}`);
+          const isOpen = box.classList.toggle("open");
+          e.currentTarget.innerHTML = isOpen
+            ? "<span>🔼 ব্যাখ্যা লুকান</span>"
+            : "<span>📖 ব্যাখ্যা ও অতিরিক্ত তথ্য দেখুন</span>";
+        });
+      });
+
+      updateScoreboard();
+    }
+
+    function handleOptionClick(e) {
+      const btn = e.currentTarget;
+      const qid = Number(btn.getAttribute("data-qid"));
+      const selectedKey = btn.getAttribute("data-key");
+
+      // Prevent re-answering
+      if (userAnswers[qid]) return;
+
+      const q = quizData.find(item => item.id === qid);
+      const isCorrect = selectedKey === q.correct;
+
+      userAnswers[qid] = {
+        selectedKey,
+        isCorrect
+      };
+
+      // Update UI for this question
+      const card = document.getElementById(`q-card-${qid}`);
+      const badge = document.getElementById(`badge-${qid}`);
+      const optionBtns = document.querySelectorAll(`#options-${qid} .option-btn`);
+
+      optionBtns.forEach(b => {
+        b.disabled = true;
+        const k = b.getAttribute("data-key");
+        if (k === q.correct) {
+          b.classList.add("correct-opt");
+        } else if (k === selectedKey && !isCorrect) {
+          b.classList.add("wrong-opt");
+        }
+      });
+
+      if (isCorrect) {
+        card.classList.add("answered-correct");
+        badge.textContent = "সঠিক (+১.০০)";
+        badge.classList.add("show-correct");
+      } else {
+        card.classList.add("answered-wrong");
+        badge.textContent = "ভুল (-০.৫০)";
+        badge.classList.add("show-wrong");
+      }
+
+      // Reveal the "Click to view explanation" button
+      document.getElementById(`exp-wrap-${qid}`).classList.add("visible");
+
+      updateScoreboard();
+    }
+
+    function calculateStats() {
+      const total = quizData.length;
+      let answered = 0;
+      let correct = 0;
+      let wrong = 0;
+
+      Object.values(userAnswers).forEach(ans => {
+        answered++;
+        if (ans.isCorrect) correct++;
+        else wrong++;
+      });
+
+      const skipped = total - answered;
+      const penalty = wrong * 0.50;
+      const score = correct - penalty;
+
+      return { total, answered, correct, wrong, skipped, penalty, score };
+    }
+
+    function updateScoreboard() {
+      const s = calculateStats();
+      document.getElementById("stat-answered").textContent = `${toBnNum(s.answered)} / ${toBnNum(s.total)}`;
+      document.getElementById("stat-correct").textContent = toBnNum(s.correct);
+      document.getElementById("stat-wrong").textContent = toBnNum(s.wrong);
+      document.getElementById("stat-score").textContent = toBnNum(s.score.toFixed(2));
+    }
+
+    function showFinalResult() {
+      const s = calculateStats();
+      const resultPanel = document.getElementById("result-panel");
+      const summaryGrid = document.getElementById("result-summary-grid");
+      const wrongContainer = document.getElementById("wrong-list-container");
+
+      summaryGrid.innerHTML = `
+        <div class="res-card">
+          <div class="label">মোট প্রশ্ন</div>
+          <div class="val">${toBnNum(s.total)}</div>
+        </div>
+        <div class="res-card">
+          <div class="label">সঠিক উত্তর (+১)</div>
+          <div class="val" style="color: var(--success);">${toBnNum(s.correct)}</div>
+        </div>
+        <div class="res-card">
+          <div class="label">ভুল উত্তর</div>
+          <div class="val" style="color: var(--danger);">${toBnNum(s.wrong)}</div>
+        </div>
+        <div class="res-card">
+          <div class="label">নেগেটিভ কর্তন (-০.৫০)</div>
+          <div class="val" style="color: var(--danger);">-${toBnNum(s.penalty.toFixed(2))}</div>
+        </div>
+        <div class="res-card">
+          <div class="label">উত্তর দেননি</div>
+          <div class="val" style="color: var(--muted);">${toBnNum(s.skipped)}</div>
+        </div>
+        <div class="res-card highlight">
+          <div class="label">চূড়ান্ত স্কোর</div>
+          <div class="val">${toBnNum(s.score.toFixed(2))} / ${toBnNum(s.total)}</div>
+        </div>
+      `;
+
+      // Collect wrong questions
+      const wrongQuestions = quizData.filter(q => userAnswers[q.id] && !userAnswers[q.id].isCorrect);
+
+      if (s.answered === 0) {
+        wrongContainer.innerHTML = `
+          <div class="perfect-box" style="background:#f8fafc; border-color:#cbd5e1; color:#334155;">
+            আপনি এখনো কোনো প্রশ্নের উত্তর দাগাননি। প্রথমে প্রশ্নগুলোর উত্তর দিন!
+          </div>
+        `;
+      } else if (wrongQuestions.length === 0) {
+        wrongContainer.innerHTML = `
+          <div class="perfect-box">
+            🎉 চমৎকার! আপনার উত্তর দেওয়া একটি প্রশ্নও ভুল হয়নি!
+          </div>
+        `;
+      } else {
+        const itemsHtml = wrongQuestions.map(q => {
+          const userKey = userAnswers[q.id].selectedKey;
+          const userOptObj = q.options.find(o => o.key === userKey);
+          const userOptText = userOptObj ? `${userOptObj.key}. ${userOptObj.text}` : userKey;
+
+          return `
+            <div class="wrong-item">
+              <div class="wrong-item-q">প্রশ্ন ${toBnNum(q.id)}: ${q.question}</div>
+              <div class="wrong-item-meta">
+                <span class="tag-user">আপনার উত্তর: ${userOptText}</span>
+                <span class="tag-correct">সঠিক উত্তর: ${q.correctDisplay}</span>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        wrongContainer.innerHTML = `
+          <h3 class="wrong-list-title">❌ ভুল হওয়া প্রশ্নগুলোর তালিকা (${toBnNum(wrongQuestions.length)}টি)</h3>
+          ${itemsHtml}
+        `;
+      }
+
+      resultPanel.classList.add("visible");
+      resultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetQuiz() {
+      userAnswers = {};
+      document.getElementById("result-panel").classList.remove("visible");
+      renderQuiz();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("btn-finish").addEventListener("click", showFinalResult);
+    document.getElementById("btn-reset").addEventListener("click", resetQuiz);
+
+    // Initialize
+    renderQuiz();
+  </script>
+</body>
+</html>
+```
